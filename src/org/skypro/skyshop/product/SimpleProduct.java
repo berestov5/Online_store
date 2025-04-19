@@ -21,7 +21,7 @@ public class SimpleProduct extends Product {
 
     @Override
     public String toString() {
-        return "<" + super.getNameProduct() + ">: " +
+        return "<" + super.getName() + ">: " +
                 "<" + getPrice() + ">";
     }
 }

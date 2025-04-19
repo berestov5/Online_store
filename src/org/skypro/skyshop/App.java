@@ -1,10 +1,13 @@
 package org.skypro.skyshop;
 
+import org.skypro.skyshop.articles.Article;
+import org.skypro.skyshop.articles.SearchEngine;
+import org.skypro.skyshop.articles.Searchable;
 import org.skypro.skyshop.basket.ProductBasket;
-import org.skypro.skyshop.product.DiscountedProduct;
-import org.skypro.skyshop.product.FixPriceProduct;
+import org.skypro.skyshop.product.*;
 import org.skypro.skyshop.product.SimpleProduct;
-import org.skypro.skyshop.product.SimpleProduct;
+
+import java.util.Arrays;
 
 public class App {
     public static void main(String[] args) {
@@ -21,6 +24,33 @@ public class App {
         productBasket.printProductBasket();
         System.out.println("Получение стоимости пустой корзины: " + productBasket.totalCostOfTheProductBasket());
         System.out.println("Поиск товара по имени в пустой корзине: " + productBasket.searchProductInBasket("Сыр"));
+
+
+        SearchEngine searchEngine = getSearchEngine();
+        System.out.println("Массив заполненый: \n" + searchEngine);
+
+        printArraySearch(searchEngine, "Сыр");
+        printArraySearch(searchEngine, "мясо");
+        printArraySearch(searchEngine, "Доярки");
+        printArraySearch(searchEngine, "инкогнито");
+        printArraySearch(searchEngine, "кефир");
+
+    }
+
+    private static void printArraySearch(SearchEngine engine, String text) {
+        System.out.println("Поиск по запросу - " + text);
+        Searchable[] searchables = engine.search(text);
+        for (Searchable el : searchables) {
+            if (el != null) {
+                System.out.println(el.getSearchTerm());
+                System.out.println(el.getStringRepresentation());
+            }
+
+            if (searchables[0] == null) {
+                System.out.println("Нечего не найдено!");
+                return;
+            }
+        }
     }
 
     private static ProductBasket getProductBasket() {
@@ -32,5 +62,20 @@ public class App {
         productBasket.addProduct(new DiscountedProduct("Колбаса", 350, 15));
 
         return productBasket;
+    }
+
+    private static SearchEngine getSearchEngine() {
+        SearchEngine searchEngine = new SearchEngine(10);
+        searchEngine.add(new Article("Хлеб всему голова!", "Урожайность пшеницы за полярным кругом бьет рекорды!"));
+        searchEngine.add(new Article("Молочный рай.", "Доярки села Кукуева рапортуют..."));
+        searchEngine.add(new Article("Космический кефир!", "Китай вывел спутник на орбиту земли используя двигатели на кефире."));
+        searchEngine.add(new Article("Конические кони.", "Колбаса и вечность. Наблюдения."));
+        searchEngine.add(new SimpleProduct("мясо", 500));
+        searchEngine.add(new SimpleProduct("Сыр", 250));
+        searchEngine.add(new DiscountedProduct("Масло", 280, 20));
+        searchEngine.add(new FixPriceProduct("Хлеб"));
+        searchEngine.add(new FixPriceProduct("Кефир"));
+        searchEngine.add(new DiscountedProduct("Колбаса", 350, 15));
+        return searchEngine;
     }
 }
