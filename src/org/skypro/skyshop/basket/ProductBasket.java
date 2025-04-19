@@ -25,10 +25,20 @@ public class ProductBasket {
         int sum = 0;
         for (Product product : productsArray) {
             if (product != null) {
-                sum += product.getProductPrice();
+                sum += product.getPrice();
             }
         }
         return sum;
+    }
+
+    public int quantitySpecialGoods() {
+        int count = 0;
+        for (Product product : productsArray) {
+            if (product != null && product.isSpecial() == true) {
+                count++;
+            }
+        }
+        return count;
     }
 
     public void printProductBasket() {
@@ -39,7 +49,11 @@ public class ProductBasket {
                 arrayIsEmpty = false;
             }
         }
-        System.out.println(arrayIsEmpty == true ? "в корзине пусто" : "Итого: " + totalCostOfTheProductBasket());
+        if (arrayIsEmpty == true) {
+            System.out.println("в корзине пусто.");
+        } else {
+            System.out.printf("Итого: %d \nСпециальных товаров: %d\n", totalCostOfTheProductBasket(), quantitySpecialGoods());
+        }
     }
 
     public boolean searchProductInBasket(String name) {

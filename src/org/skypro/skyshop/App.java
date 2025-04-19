@@ -1,13 +1,16 @@
 package org.skypro.skyshop;
 
 import org.skypro.skyshop.basket.ProductBasket;
-import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.product.DiscountedProduct;
+import org.skypro.skyshop.product.FixPriceProduct;
+import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.product.SimpleProduct;
 
 public class App {
     public static void main(String[] args) {
         ProductBasket productBasket = getProductBasket();
         System.out.println("Добавление продукта в заполненную корзину, в которой нет свободного места: ");
-        productBasket.addProduct(new Product("Конфеты", 500));
+        productBasket.addProduct(new SimpleProduct("Конфеты", 500));
         System.out.println("Печать содержимого корзины с несколькими товарами:");
         productBasket.printProductBasket();
         System.out.println("Получение стоимости корзины с несколькими товарами: " + productBasket.totalCostOfTheProductBasket());
@@ -22,11 +25,11 @@ public class App {
 
     private static ProductBasket getProductBasket() {
         ProductBasket productBasket = new ProductBasket();
-        productBasket.addProduct(new Product("Сыр", 250));
-        productBasket.addProduct(new Product("Масло", 280));
-        productBasket.addProduct(new Product("Хлеб", 50));
-        productBasket.addProduct(new Product("Кефир", 90));
-        productBasket.addProduct(new Product("Колбаса", 350));
+        productBasket.addProduct(new SimpleProduct("Сыр", 250));
+        productBasket.addProduct(new DiscountedProduct("Масло", 280, 20));
+        productBasket.addProduct(new FixPriceProduct("Хлеб"));
+        productBasket.addProduct(new FixPriceProduct("Кефир"));
+        productBasket.addProduct(new DiscountedProduct("Колбаса", 350, 15));
 
         return productBasket;
     }
