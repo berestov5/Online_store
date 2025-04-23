@@ -58,7 +58,7 @@ public class ProductBasket {
 
     public boolean searchProductInBasket(String name) {
         for (Product product : productsArray) {
-            if (product != null && product.getNameProduct().equals(name)) {
+            if (product != null && product.getName().equals(name)) {
                 return true;
             }
         }

@@ -22,7 +22,7 @@ public class DiscountedProduct extends Product {
 
     @Override
     public String toString() {
-        return "<" + super.getNameProduct() + ">: " +
+        return "<" + super.getName() + ">: " +
                 "<" + getPrice() + ">" +
                 "(" + discountInPercent + "%)";
     }
