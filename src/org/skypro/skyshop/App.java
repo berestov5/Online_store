@@ -4,6 +4,7 @@ import org.skypro.skyshop.articles.Article;
 import org.skypro.skyshop.articles.SearchEngine;
 import org.skypro.skyshop.articles.Searchable;
 import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.exception.BestResultNotFound;
 import org.skypro.skyshop.product.*;
 import org.skypro.skyshop.product.SimpleProduct;
 
@@ -35,6 +36,63 @@ public class App {
         printArraySearch(searchEngine, "инкогнито");
         printArraySearch(searchEngine, "кефир");
 
+        System.out.println("Демонстрация проверки \"неправильных\" продуктов:");
+        showProductWitsErrors();
+
+        System.out.println("Демонстрация нового метода поиска:");
+        demoSearchTheBestElement();
+    }
+
+    static void demoSearchTheBestElement() {
+        SearchEngine searchEngine = getSearchEngine();
+        try {
+            System.out.println(searchEngine.searchTheBestElement("Хлеб"));
+            System.out.println(searchEngine.searchTheBestElement("Икра"));
+        } catch (BestResultNotFound e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+
+    private static ProductBasket showProductWitsErrors() {
+        ProductBasket productBasket = new ProductBasket();
+        try {
+            productBasket.addProduct(new SimpleProduct(null, 250));
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            productBasket.addProduct(new SimpleProduct("Окунь", 0));
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            productBasket.addProduct(new DiscountedProduct("Масло", 280, 120));
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            productBasket.addProduct(new DiscountedProduct("Колбаса", 0, 15));
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            productBasket.addProduct(new SimpleProduct("  ", 90));
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            productBasket.addProduct(new DiscountedProduct("Колбаса", 350, 15));
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        return productBasket;
     }
 
     private static void printArraySearch(SearchEngine engine, String text) {
