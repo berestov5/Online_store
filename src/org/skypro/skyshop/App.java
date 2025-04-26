@@ -8,8 +8,6 @@ import org.skypro.skyshop.exception.BestResultNotFound;
 import org.skypro.skyshop.product.*;
 import org.skypro.skyshop.product.SimpleProduct;
 
-import java.util.Arrays;
-
 public class App {
     public static void main(String[] args) {
         ProductBasket productBasket = getProductBasket();
