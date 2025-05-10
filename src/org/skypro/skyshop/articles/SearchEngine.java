@@ -1,48 +1,49 @@
 package org.skypro.skyshop.articles;
 
 import org.skypro.skyshop.exception.BestResultNotFound;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SearchEngine {
     private List<Searchable> searchableList = new ArrayList<>();
 
-
     public Searchable searchTheBestElement(String search) throws BestResultNotFound {
-        int indexBestElement = 0, countMax = 0;
-        for (int i = 0; i < searchableList.size(); i++) {
+        int indexBestElement = 0, countMax = 0, indexElement = 0;
+        for (Searchable el : searchableList) {
             int index = 0, count = 0;
-            int indexSubstring = searchableList.get(i).getSearchTerm().indexOf(search, index);
-
+            int indexSubstring = el.getSearchTerm().indexOf(search, index);
+            indexElement++;
             while (indexSubstring != -1) {
                 count++;
                 index = indexSubstring + search.length();
-                indexSubstring = searchableList.get(i).getSearchTerm().indexOf(search, index);
+                indexSubstring = el.getSearchTerm().indexOf(search, index);
+
             }
 
             if (count > 0 && countMax < count) {
                 countMax = count;
-                indexBestElement = i;
+                indexBestElement = indexElement;
             }
         }
 
         if (countMax == 0) {
             throw new BestResultNotFound("Для запроса " + "\"" + search + "\"" + " не нашлось подходящей статьи.");
         } else {
-            return searchableList.get(indexBestElement);
+            return searchableList.get(--indexBestElement);
         }
     }
 
-    public List<Searchable> search(String text) {
-        List<Searchable> arraylistResult = new ArrayList<>();
+    public Map<String, Searchable> search(String text) {
+        Map<String, Searchable> treeMapResult = new TreeMap<>();
 
         for (Searchable searchable : searchableList) {
             if (searchable != null && searchable.getSearchTerm().contains(text)) {
-                arraylistResult.add(searchable);
+                treeMapResult.put(searchable.getName(), searchable);
             }
         }
-        return arraylistResult;
+        return treeMapResult;
     }
 
     public void add(Searchable searchable) {
