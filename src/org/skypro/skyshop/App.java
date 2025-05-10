@@ -8,13 +8,15 @@ import org.skypro.skyshop.exception.BestResultNotFound;
 import org.skypro.skyshop.product.*;
 import org.skypro.skyshop.product.SimpleProduct;
 
+import java.util.List;
+
 public class App {
     public static void main(String[] args) {
         ProductBasket productBasket = getProductBasket();
-        System.out.println("Добавление продукта в заполненную корзину, в которой нет свободного места: ");
-        productBasket.addProduct(new SimpleProduct("Конфеты", 500));
+
         System.out.println("Печать содержимого корзины с несколькими товарами:");
         productBasket.printProductBasket();
+
         System.out.println("Получение стоимости корзины с несколькими товарами: " + productBasket.totalCostOfTheProductBasket());
         System.out.println("Поиск товара, который есть в корзине: " + productBasket.searchProductInBasket("Сыр"));
         System.out.println("Поиск товара, которого нет в корзине: " + productBasket.searchProductInBasket("Нету"));
@@ -24,6 +26,15 @@ public class App {
         System.out.println("Получение стоимости пустой корзины: " + productBasket.totalCostOfTheProductBasket());
         System.out.println("Поиск товара по имени в пустой корзине: " + productBasket.searchProductInBasket("Сыр"));
 
+        System.out.println("Изменения по домашке - Java Collections Framework: List");
+        ProductBasket productBasket2 = getProductBasket();
+        System.out.println("Удаление продукта по имени и возврат массива удаленных продуктов: " + productBasket2.removeProductByName("Хлеб"));
+        System.out.println("Печать содержимого корзины после удаления продукта: ");
+        productBasket2.printProductBasket();
+        System.out.println("Удаление несуществующего продукта");
+        productBasket2.removeProductByName("неХлеб");
+        System.out.println("Печать содержимого корзины после удаления несуществующего продукта: ");
+        productBasket2.printProductBasket();
 
         SearchEngine searchEngine = getSearchEngine();
         System.out.println("Массив заполненый: \n" + searchEngine);
@@ -95,14 +106,14 @@ public class App {
 
     private static void printArraySearch(SearchEngine engine, String text) {
         System.out.println("Поиск по запросу - " + text);
-        Searchable[] searchables = engine.search(text);
-        for (Searchable el : searchables) {
+        List<Searchable> searchable = engine.search(text);
+        for (Searchable el : searchable) {
             if (el != null) {
                 System.out.println(el.getSearchTerm());
                 System.out.println(el.getStringRepresentation());
             }
 
-            if (searchables[0] == null) {
+            if (searchable.isEmpty()) {
                 System.out.println("Нечего не найдено!");
                 return;
             }
@@ -116,12 +127,12 @@ public class App {
         productBasket.addProduct(new FixPriceProduct("Хлеб"));
         productBasket.addProduct(new FixPriceProduct("Кефир"));
         productBasket.addProduct(new DiscountedProduct("Колбаса", 350, 15));
-
+        productBasket.addProduct(new SimpleProduct("Хлеб", 50));
         return productBasket;
     }
 
     private static SearchEngine getSearchEngine() {
-        SearchEngine searchEngine = new SearchEngine(10);
+        SearchEngine searchEngine = new SearchEngine();
         searchEngine.add(new Article("Хлеб всему голова!", "Урожайность пшеницы за полярным кругом бьет рекорды!"));
         searchEngine.add(new Article("Молочный рай.", "Доярки села Кукуева рапортуют..."));
         searchEngine.add(new Article("Космический кефир!", "Китай вывел спутник на орбиту земли используя двигатели на кефире."));
