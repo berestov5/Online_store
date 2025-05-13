@@ -7,8 +7,7 @@ import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.exception.BestResultNotFound;
 import org.skypro.skyshop.product.*;
 import org.skypro.skyshop.product.SimpleProduct;
-
-import java.util.List;
+import java.util.Map;
 
 public class App {
     public static void main(String[] args) {
@@ -37,7 +36,9 @@ public class App {
         productBasket2.printProductBasket();
 
         SearchEngine searchEngine = getSearchEngine();
-        System.out.println("Массив заполненый: \n" + searchEngine);
+        System.out.println("Список заполненый: \n" + searchEngine);
+
+        System.out.println(searchEngine.search("Хлеб"));
 
         printArraySearch(searchEngine, "Сыр");
         printArraySearch(searchEngine, "мясо");
@@ -49,19 +50,18 @@ public class App {
         showProductWitsErrors();
 
         System.out.println("Демонстрация нового метода поиска:");
-        demoSearchTheBestElement();
+        demoSearchTheBestElement("Хлеб");
+        demoSearchTheBestElement("Икра");
     }
 
-    static void demoSearchTheBestElement() {
+    static void demoSearchTheBestElement(String search) {
         SearchEngine searchEngine = getSearchEngine();
         try {
-            System.out.println(searchEngine.searchTheBestElement("Хлеб"));
-            System.out.println(searchEngine.searchTheBestElement("Икра"));
+            System.out.println(searchEngine.searchTheBestElement(search));
         } catch (BestResultNotFound e) {
             System.out.println(e.getMessage());
         }
     }
-
 
     private static ProductBasket showProductWitsErrors() {
         ProductBasket productBasket = new ProductBasket();
@@ -106,16 +106,17 @@ public class App {
 
     private static void printArraySearch(SearchEngine engine, String text) {
         System.out.println("Поиск по запросу - " + text);
-        List<Searchable> searchable = engine.search(text);
-        for (Searchable el : searchable) {
-            if (el != null) {
-                System.out.println(el.getSearchTerm());
-                System.out.println(el.getStringRepresentation());
-            }
 
-            if (searchable.isEmpty()) {
-                System.out.println("Нечего не найдено!");
-                return;
+        Map<String, Searchable> searchable = engine.search(text);
+        if (searchable.isEmpty()) {
+            System.out.println("Нечего не найдено!");
+            return;
+        }
+
+        for (Map.Entry<String, Searchable> el : searchable.entrySet()) {
+            if (el != null) {
+                System.out.println(el.getValue().getSearchTerm());
+                System.out.println(el.getValue().getStringRepresentation());
             }
         }
     }
@@ -143,6 +144,7 @@ public class App {
         searchEngine.add(new FixPriceProduct("Хлеб"));
         searchEngine.add(new FixPriceProduct("Кефир"));
         searchEngine.add(new DiscountedProduct("Колбаса", 350, 15));
+        searchEngine.add(new SimpleProduct("Хлеб", 50));
         return searchEngine;
     }
 }
