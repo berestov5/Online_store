@@ -7,7 +7,7 @@ import org.skypro.skyshop.basket.ProductBasket;
 import org.skypro.skyshop.exception.BestResultNotFound;
 import org.skypro.skyshop.product.*;
 import org.skypro.skyshop.product.SimpleProduct;
-import java.util.Map;
+import java.util.Set;
 
 public class App {
     public static void main(String[] args) {
@@ -38,7 +38,8 @@ public class App {
         SearchEngine searchEngine = getSearchEngine();
         System.out.println("Список заполненый: \n" + searchEngine);
 
-        System.out.println(searchEngine.search("Хлеб"));
+
+        System.out.println(searchEngine.search("Масло"));
 
         printArraySearch(searchEngine, "Сыр");
         printArraySearch(searchEngine, "мясо");
@@ -52,6 +53,9 @@ public class App {
         System.out.println("Демонстрация нового метода поиска:");
         demoSearchTheBestElement("Хлеб");
         demoSearchTheBestElement("Икра");
+
+        SearchEngine searchEngineHashSet = getSearchEngineHashSet();
+        System.out.println("Вывод отсортированного множества HashSet : \n" + searchEngineHashSet.search("Хле"));
     }
 
     static void demoSearchTheBestElement(String search) {
@@ -107,16 +111,15 @@ public class App {
     private static void printArraySearch(SearchEngine engine, String text) {
         System.out.println("Поиск по запросу - " + text);
 
-        Map<String, Searchable> searchable = engine.search(text);
+        Set<Searchable> searchable = engine.search(text);
         if (searchable.isEmpty()) {
             System.out.println("Нечего не найдено!");
             return;
         }
 
-        for (Map.Entry<String, Searchable> el : searchable.entrySet()) {
+        for (Searchable el : searchable) {
             if (el != null) {
-                System.out.println(el.getValue().getSearchTerm());
-                System.out.println(el.getValue().getStringRepresentation());
+                System.out.println(el.getName() + " " + el.getContentType());
             }
         }
     }
@@ -134,7 +137,7 @@ public class App {
 
     private static SearchEngine getSearchEngine() {
         SearchEngine searchEngine = new SearchEngine();
-        searchEngine.add(new Article("Хлеб всему голова!", "Урожайность пшеницы за полярным кругом бьет рекорды!"));
+        searchEngine.add(new Article("Хлеб всему голова!!", "Урожайность пшеницы за полярным кругом бьет рекорды!"));
         searchEngine.add(new Article("Молочный рай.", "Доярки села Кукуева рапортуют..."));
         searchEngine.add(new Article("Космический кефир!", "Китай вывел спутник на орбиту земли используя двигатели на кефире."));
         searchEngine.add(new Article("Конические кони.", "Колбаса и вечность. Наблюдения."));
@@ -145,6 +148,17 @@ public class App {
         searchEngine.add(new FixPriceProduct("Кефир"));
         searchEngine.add(new DiscountedProduct("Колбаса", 350, 15));
         searchEngine.add(new SimpleProduct("Хлеб", 50));
+        return searchEngine;
+    }
+
+    private static SearchEngine getSearchEngineHashSet() {
+        SearchEngine searchEngine = new SearchEngine();
+        searchEngine.add(new Article("Хлеб всему голова!!", "Урожайность пшеницы за полярным кругом бьет рекорды!"));
+        searchEngine.add(new Article("Кто съел весь Хлеб?", "Криминальные разборки на пищекомбинате \"Хлебный\""));
+        searchEngine.add(new FixPriceProduct("Хлеп"));
+        searchEngine.add(new FixPriceProduct("Хлеб"));
+        searchEngine.add(new SimpleProduct("Хлебушек", 50));
+        searchEngine.add(new SimpleProduct("Хлебашек", 50));
         return searchEngine;
     }
 }
