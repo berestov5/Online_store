@@ -35,7 +35,6 @@ public class ProductBasket {
         for (List<Product> products : productsMap.values()) {
             for (Product product : products) {
                 sum += product.getPrice();
-
             }
         }
         return sum;

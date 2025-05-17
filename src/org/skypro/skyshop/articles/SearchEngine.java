@@ -1,20 +1,19 @@
 package org.skypro.skyshop.articles;
 
 import org.skypro.skyshop.exception.BestResultNotFound;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+
+import java.util.*;
 
 public class SearchEngine {
-    private List<Searchable> searchableList = new ArrayList<>();
+    private Set<Searchable> searchableHashSet = new HashSet<>();
 
     public Searchable searchTheBestElement(String search) throws BestResultNotFound {
-        int indexBestElement = 0, countMax = 0, indexElement = 0;
-        for (Searchable el : searchableList) {
+        Searchable bestElement = null;
+        int countMax = 0;
+        for (Searchable el : searchableHashSet) {
             int index = 0, count = 0;
             int indexSubstring = el.getSearchTerm().indexOf(search, index);
-            indexElement++;
+
             while (indexSubstring != -1) {
                 count++;
                 index = indexSubstring + search.length();
@@ -24,34 +23,34 @@ public class SearchEngine {
 
             if (count > 0 && countMax < count) {
                 countMax = count;
-                indexBestElement = indexElement;
+                bestElement = el;
             }
         }
 
         if (countMax == 0) {
             throw new BestResultNotFound("Для запроса " + "\"" + search + "\"" + " не нашлось подходящей статьи.");
         } else {
-            return searchableList.get(--indexBestElement);
+            return bestElement;
         }
     }
 
-    public Map<String, Searchable> search(String text) {
-        Map<String, Searchable> treeMapResult = new TreeMap<>();
+    public Set<Searchable> search(String text) {
+        Set<Searchable> treeSetResult = new TreeSet<>(new SearchComparator());
 
-        for (Searchable searchable : searchableList) {
+        for (Searchable searchable : searchableHashSet) {
             if (searchable != null && searchable.getSearchTerm().contains(text)) {
-                treeMapResult.put(searchable.getName(), searchable);
+                treeSetResult.add(searchable);
             }
         }
-        return treeMapResult;
+        return treeSetResult;
     }
 
     public void add(Searchable searchable) {
-        searchableList.add(searchable);
+        searchableHashSet.add(searchable);
     }
 
     @Override
     public String toString() {
-        return searchableList.toString();
+        return searchableHashSet.toString();
     }
 }
