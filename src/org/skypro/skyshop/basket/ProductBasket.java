@@ -2,11 +2,10 @@ package org.skypro.skyshop.basket;
 
 import org.skypro.skyshop.product.Product;
 
-import java.sql.Array;
 import java.util.*;
 
 public class ProductBasket {
-    //    private List<Product> productsList = new LinkedList<>();
+
     private Map<String, List<Product>> productsMap = new HashMap<>();
 
     public void addProduct(Product productAdd) {
@@ -31,29 +30,24 @@ public class ProductBasket {
     }
 
     public int totalCostOfTheProductBasket() {
-        int sum = 0;
-        for (List<Product> products : productsMap.values()) {
-            for (Product product : products) {
-                sum += product.getPrice();
-            }
-        }
-        return sum;
+
+        return productsMap.values().stream()
+                .flatMap(List::stream)
+                .mapToInt(Product::getPrice)
+                .sum();
     }
 
-    public int quantitySpecialGoods() {
-        int count = 0;
-        for (List<Product> products : productsMap.values()) {
-            for (Product product : products) {
-                if (product.isSpecial()) count++;
-            }
-        }
-        return count;
+    private int quantitySpecialGoods() {
+        return (int) productsMap.values().stream()
+                .flatMap(List::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 
     public void printProductBasket() {
-        for (Map.Entry product : productsMap.entrySet()) {
-            System.out.println(product);
-        }
+        productsMap.values().stream()
+                .flatMap(List::stream)
+                .forEach(System.out::println);
 
         if (productsMap.isEmpty()) {
             System.out.println("в корзине пусто.");
